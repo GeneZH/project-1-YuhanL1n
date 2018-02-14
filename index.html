@@ -4,78 +4,137 @@
 <link rel="stylesheet" type="text/css" href="project1.css"></link>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <!--Put your D3 import statement between these two lines-->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <!--Put your D3 import statement between these two lines-->
 </head>
 
 <body>
-	<div id="partOne">
-        <h1>Part One: </h1>
-	</div>
+<div id="partOne">
+  <h1>Part One: </h1>
+</div>
 
-    <div id="partTwo">
-        <h1>Part Two: </h1>
-        <div id="scatterplot">
-            <p id="scatterLabel"></p>
-        </div>
-	</div>
+<div id="partTwo">
+  <h1>Part Two: </h1>
+  <div id="scatterplot">
+    <p id="scatterLabel"></p>
+  </div>
+</div>
 
-    <div id="partThree">
-        <h1>Part Three &amp; Four: </h1>
-        <div id="linegraph">
-        </div>
-	</div>
+<div id="partThree">
+  <h1>Part Three &amp; Four: </h1>
+  <div id="linegraph">
+  </div>
+</div>
 
-    <div id="partFive">
-        <h1>Part Five: </h1>
-        <div id="scatterplotSet">
-        </div>
-	</div>
+<div id="partFive">
+  <h1>Part Five: </h1>
+  <div id="scatterplotSet">
+  </div>
+</div>
 
-    <script type="text/javascript">
-        // Put your part one code here ***********************
-        d3.csv("/data/anscombe_I.csv", function(data){
-            console.log(data);
-            checkDataset(data);
+<script type="text/javascript">
+      // Put your part one code here ***********************
+      d3.csv("/data/anscombe_I.csv", function(data){
+        console.log(data);
+        checkDataset(data);
 
-        });
+      });
 
-        d3.csv("/data/anscombe_II.csv", function(data){
-            console.log(data);
-            checkDataset(data);
-            
-        });
+      d3.csv("/data/anscombe_II.csv", function(data){
+        console.log(data);
+        checkDataset(data);
 
-        d3.csv("/data/anscombe_III.csv", function(data){
-            console.log(data);
-            checkDataset(data);
-            
-        });
+      });
 
-        d3.csv("/data/anscombe_IV.csv", function(data){
-            console.log(data);
-            checkDataset(data);
-            
-        });
+      d3.csv("/data/anscombe_III.csv", function(data){
+        console.log(data);
+        checkDataset(data);
 
-        // Leave this to test your data uploading. All data uploading should be above this line
-        function checkDataset(dataset) {
-            if (dataset.length == 11)
-                $("#partOne").append("<p>data loaded correctly</p>");
-            else
-                $("#partOne").append("<p>data loaded incorrectly. Try using the debugger to help you find the bug!</p>");
-        }
+      });
 
-        // Put your part two code here ***********************
+      d3.csv("/data/anscombe_IV.csv", function(data){
+        console.log(data);
+        checkDataset(data);
+
+      });
+
+      // Leave this to test your data uploading. All data uploading should be above this line
+      function checkDataset(dataset) {
+        if (dataset.length == 11)
+          $("#partOne").append("<p>data loaded correctly</p>");
+        else
+          $("#partOne").append("<p>data loaded incorrectly. Try using the debugger to help you find the bug!</p>");
+      }
+
+      // Put your part two code here ***********************
+      var margin = {top:20, right: 20, bottom: 30, left: 40},
+      width = 960- margin.left - margin.right,
+      height = 500 - margin.top -margin.bottom;
+
+      var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+          xScale = d3.scaleLinear().range([0, width]);
+
+// setup y
+      var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+          yScale = d3.scaleLinear().range([height, 0]);
+
+      var svg = d3.select("#scatterplot").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      d3.csv("/data/anscombe_II.csv", function(data){
+
+      xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+      yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+
+        // draw dots
+      svg.selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", function(d){return xScale(d['x']);})
+      .attr("cy", function(d){return yScale(d['y']);})
+      ;
 
 
 
-        // Put your part three & four code here ***********************
+       // x-axis
+      svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xScale));
 
-        // Put your part five code here ***********************
+      svg.append("text")
+      .attr("class", "label")
+      .text("X")
+      .attr("x", width)
+      .attr("y", height-5)
+      ;
+
+       // y-axis
+      svg.append("g")
+      .call(d3.axisLeft(yScale))
+      ;
+
+      svg.append("text")
+      .attr("class", "label")
+      .text("Y")
+      .attr("x", 5)
+      .attr("y", 0)
+      ;
+
+      });
+
+
+      // Put your part three & four code here ***********************
+
+      // Put your part five code here ***********************
 
     </script>
-</body>
+  </body>
 
 
-</html>
+  </html>
