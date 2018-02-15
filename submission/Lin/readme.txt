@@ -1,5 +1,7 @@
 Finish part1-5, bell:tooltips and whistle:transitions.
 
+Tooltip is applied on part 3 and transitions are applied on part 2, there's a selection box which can select from the four datasets.
+
 References:
 1. Loading data
 	http://learnjsdata.com/read_data.html
