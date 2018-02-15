@@ -15,6 +15,12 @@
 
   <div id="partTwo">
     <h1>Part Two: </h1>
+    <select id="data_select">
+  <option value=0>Anscombe I</option>
+  <option value=1>Anscombe II</option>
+  <option value=2>Anscombe III</option>
+  <option value=3>Anscombe IV</option>
+</select>
     <div id="scatterplot">
     </div>
   </div>
@@ -67,8 +73,17 @@
       }
 
       // Put your part two code here ***********************
-      part2();
-      function part2(){
+      part2(0);
+      var select=document.getElementById("data_select");
+      select.addEventListener("change",function(d){
+        part2(select.value);
+      });
+
+      function part2(value){
+        var div = document.getElementById('scatterplot');
+        while(div.firstChild){
+          div.removeChild(div.firstChild);
+        }
         var margin = {top:20, right: 20, bottom: 30, left: 40},
         width = 960- margin.left - margin.right,
         height = 500 - margin.top -margin.bottom;
@@ -85,8 +100,9 @@
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      var data_files=["/data/anscombe_I.csv","/data/anscombe_II.csv","/data/anscombe_III.csv","/data/anscombe_IV.csv"];
 
-      d3.csv("/data/anscombe_I.csv", function(data){
+      d3.csv(data_files[value], function(data){
 
         xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
         yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
@@ -158,6 +174,11 @@
 
         data.sort(function(a,b){return a.x-b.x});
 
+        var tooltip = d3.select("#linegraph").append("div").attr("id", "toolTip");
+        tooltip.style("position","relative").
+        style("height","auto").
+        style("font-size","14");
+        
 
           // draw dots
           svg.selectAll(".dot")
@@ -171,15 +192,29 @@
           .on("mouseover", function(d) {
             var dot = d3.select(this);
             dot.style('fill','red')
-            .attr('r',4)
+            .attr('r',4);
+
+           d3.select("#tooltip")
+            .style("left", d3.mouse(this)[0]-width)
+            .style("top", d3.mouse(this)[1]-height)
+            .style("display","inline-block")
+            .text("("+d.x+","+d.y+")");
+
+
           })
           .on("mouseout", function(d) {
             var dot = d3.select(this);
             dot.style('fill','black')
-            .attr('r',3.5)
+            .attr('r',3.5);
+
+            d3.select("#tooltip").style("display","none");
+
+
+
           })
           .on("click",function(d){
             document.getElementById("scatterLabel").innerHTML = "Values: "+'('+d.x+','+d.y+')';
+
           });
 
           var vline = d3.line()
@@ -298,7 +333,7 @@
         .attr("class", "label")
         .text(label_text)
        .attr("x", width/2)
-       .attr("y", 0 )
+       .attr("y", 0 );
 
        });
     }
