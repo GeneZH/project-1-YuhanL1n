@@ -1,38 +1,38 @@
 <html>
 <head>
-<title>Project 0</title>
-<link rel="stylesheet" type="text/css" href="project1.css"></link>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<!--Put your D3 import statement between these two lines-->
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<!--Put your D3 import statement between these two lines-->
+  <title>Project 0</title>
+  <link rel="stylesheet" type="text/css" href="project1.css"></link>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <!--Put your D3 import statement between these two lines-->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <!--Put your D3 import statement between these two lines-->
 </head>
 
 <body>
-<div id="partOne">
-  <h1>Part One: </h1>
-</div>
-
-<div id="partTwo">
-  <h1>Part Two: </h1>
-  <div id="scatterplot">
+  <div id="partOne">
+    <h1>Part One: </h1>
   </div>
-</div>
 
-<div id="partThree">
-  <h1>Part Three &amp; Four: </h1>
-  <div id="linegraph">
-    <p id="scatterLabel" style="font-size:160%;"></p>
+  <div id="partTwo">
+    <h1>Part Two: </h1>
+    <div id="scatterplot">
+    </div>
   </div>
-</div>
 
-<div id="partFive">
-  <h1>Part Five: </h1>
-  <div id="scatterplotSet">
+  <div id="partThree">
+    <h1>Part Three &amp; Four: </h1>
+    <div id="linegraph">
+      <p id="scatterLabel" style="font-size:160%;"></p>
+    </div>
   </div>
-</div>
 
-<script type="text/javascript">
+  <div id="partFive">
+    <h1>Part Five: </h1>
+    <div id="scatterplotSet">
+    </div>
+  </div>
+
+  <script type="text/javascript">
       // Put your part one code here ***********************
       d3.csv("/data/anscombe_I.csv", function(data){
         console.log(data);
@@ -67,16 +67,18 @@
       }
 
       // Put your part two code here ***********************
-      var margin = {top:20, right: 20, bottom: 30, left: 40},
-      width = 960- margin.left - margin.right,
-      height = 500 - margin.top -margin.bottom;
+      part2();
+      function part2(){
+        var margin = {top:20, right: 20, bottom: 30, left: 40},
+        width = 960- margin.left - margin.right,
+        height = 500 - margin.top -margin.bottom;
 
       var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
-          xScale = d3.scaleLinear().range([0, width]);
+      xScale = d3.scaleLinear().range([0, width]);
 
 // setup y
       var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
-          yScale = d3.scaleLinear().range([height, 0]);
+      yScale = d3.scaleLinear().range([height, 0]);
 
       var svg = d3.select("#scatterplot").append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -90,45 +92,60 @@
         yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
 
           // draw dots
-        svg.selectAll(".dot")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 3.5)
-        .attr("cx", function(d){return xScale(d['x']);})
-        .attr("cy", function(d){return yScale(d['y']);})
-        ;
+          svg.selectAll(".dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("r", 3.5)
+          .attr("cx", function(d){return xScale(d['x']);})
+          .attr("cy", function(d){return yScale(d['y']);})
+          ;
 
          // x-axis
-        svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale));
+         svg.append("g")
+         .attr("transform", "translate(0," + height + ")")
+         .call(d3.axisBottom(xScale));
 
-        svg.append("text")
-        .attr("class", "label")
-        .text("X")
-        .attr("x", width)
-        .attr("y", height-5)
-        ;
+         svg.append("text")
+         .attr("class", "label")
+         .text("X")
+         .attr("x", width)
+         .attr("y", height-5)
+         ;
 
          // y-axis
-        svg.append("g")
-        .call(d3.axisLeft(yScale))
-        ;
+         svg.append("g")
+         .call(d3.axisLeft(yScale))
+         ;
 
-        svg.append("text")
-        .attr("class", "label")
-        .text("Y")
-        .attr("x", 5)
-        .attr("y", 0)
-        ;
+         svg.append("text")
+         .attr("class", "label")
+         .text("Y")
+         .attr("x", 5)
+         .attr("y", 0)
+         ;
 
-      });
+       });
+    }
+
 
 
       // Put your part three & four code here ***********************
-      var svg2 = d3.select("#linegraph").append("svg")
+      part3();
+      function part3(){
+        var margin = {top:20, right: 20, bottom: 30, left: 40},
+        width = 960- margin.left - margin.right,
+        height = 500 - margin.top -margin.bottom;
+
+      var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+      xScale = d3.scaleLinear().range([0, width]);
+
+// setup y
+      var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+      yScale = d3.scaleLinear().range([height, 0]);
+
+      var svg = d3.select("#linegraph").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -141,77 +158,154 @@
 
         data.sort(function(a,b){return a.x-b.x});
 
-        var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
 
           // draw dots
-        svg2.selectAll(".dot")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 3.5)
-        .attr("cx", function(d){return xScale(d['x']);})
-        .attr("cy", function(d){return yScale(d['y']);})
-        .on("mouseover", function(d) {
-          var dot = d3.select(this);
-          dot.style('fill','red')
-          .attr('r',4)
-        })
-        .on("mouseout", function(d) {
-          var dot = d3.select(this);
-          dot.style('fill','black')
-          .attr('r',3.5)
-        })
-        .on("click",function(d){
-          document.getElementById("scatterLabel").innerHTML = "Values: "+'('+d.x+','+d.y+')';
-        });
+          svg.selectAll(".dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("r", 3.5)
+          .attr("cx", function(d){return xScale(d['x']);})
+          .attr("cy", function(d){return yScale(d['y']);})
+          .on("mouseover", function(d) {
+            var dot = d3.select(this);
+            dot.style('fill','red')
+            .attr('r',4)
+          })
+          .on("mouseout", function(d) {
+            var dot = d3.select(this);
+            dot.style('fill','black')
+            .attr('r',3.5)
+          })
+          .on("click",function(d){
+            document.getElementById("scatterLabel").innerHTML = "Values: "+'('+d.x+','+d.y+')';
+          });
 
-        var vline = d3.line()
-        .x(function(d) { return xScale(d['x']); })
-        .y(function(d) { return yScale(d['y']); });
+          var vline = d3.line()
+          .x(function(d) { return xScale(d['x']); })
+          .y(function(d) { return yScale(d['y']); });
 
-        svg2.append("path")
-        .data([data])
-        .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr("stroke-width", 1.5)
-        .attr("d", vline(data));
+          svg.append("path")
+          .data([data])
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("stroke-width", 1.5)
+          .attr("d", vline(data));
 
 
          // x-axis
-        svg2.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(xScale));
+         svg.append("g")
+         .attr("transform", "translate(0," + height + ")")
+         .call(d3.axisBottom(xScale));
 
-        svg2.append("text")
-        .attr("class", "label")
-        .text("X")
-        .attr("x", width)
-        .attr("y", height-5)
-        ;
+         svg.append("text")
+         .attr("class", "label")
+         .text("X")
+         .attr("x", width)
+         .attr("y", height-5)
+         ;
 
          // y-axis
-        svg2.append("g")
-        .call(d3.axisLeft(yScale))
-        ;
+         svg.append("g")
+         .call(d3.axisLeft(yScale))
+         ;
 
-        svg2.append("text")
-        .attr("class", "label")
-        .text("Y")
-        .attr("x", 5)
-        .attr("y", 0)
-        ;
+         svg.append("text")
+         .attr("class", "label")
+         .text("Y")
+         .attr("x", 5)
+         .attr("y", 0)
+         ;
 
-      });
+       });
+    }
+
 
       // Put your part five code here ***********************
+      part5();
+      function part5(){
+        var data_files=["/data/anscombe_I.csv","/data/anscombe_II.csv","/data/anscombe_III.csv","/data/anscombe_IV.csv"];
+        var labels=["Anscombe I","Anscombe II","Anscombe III","Anscombe IV"];
 
-    </script>
-  </body>
+      for(i=0;i<4;i++){
+        draw_scatterplot(data_files[i],labels[i]);
+      }
+    }
+
+    function draw_scatterplot(file,label_text){
+              var margin = {top:20, right: 20, bottom: 30, left: 40},
+        width = 240- margin.left - margin.right,
+        height = 500 - margin.top -margin.bottom;
+
+      var xValue = function(d) { return parseFloat(d['x']);}, // data -> value
+      xScale = d3.scaleLinear().range([0, width]);
+
+// setup y
+      var yValue = function(d) { return parseFloat(d['y']);}, // data -> value
+      yScale = d3.scaleLinear().range([height, 0]);
 
 
-  </html>
+        var svg = d3.select("#scatterplotSet").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        d3.csv(file, function(data){
+
+          xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
+          yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
+
+          // draw dots
+          svg.selectAll(".dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("r", 3.5)
+          .attr("cx", function(d){return xScale(d['x']);})
+          .attr("cy", function(d){return yScale(d['y']);})
+          ;
+
+         // x-axis
+         svg.append("g")
+         .attr("transform", "translate(0," + height + ")")
+         .call(d3.axisBottom(xScale));
+
+         svg.append("text")
+         .attr("class", "label")
+         .text("X")
+         .attr("x", width)
+         .attr("y", height-5)
+         ;
+
+         // y-axis
+         svg.append("g")
+         .call(d3.axisLeft(yScale))
+         ;
+
+         svg.append("text")
+         .attr("class", "label")
+         .text("Y")
+         .attr("x", 5)
+         .attr("y", 0)
+         ;
+
+        svg.append("text")
+        .attr("class", "label")
+        .text(label_text)
+       .attr("x", width/2)
+       .attr("y", 0 )
+
+       });
+    }
+
+
+  </script>
+</body>
+
+
+</html>
